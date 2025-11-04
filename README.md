@@ -1,172 +1,146 @@
-# 🚪 LoginAppCSharp
+# 🎛️ LoginAppCSharp — UserLoginSystem (WinForms Demo)
 
-[![Repo size](https://img.shields.io/github/repo-size/Achintha-999/LoginAppCSharp)](https://github.com/Achintha-999/LoginAppCSharp)
+[![Repo Size](https://img.shields.io/github/repo-size/Achintha-999/LoginAppCSharp)](https://github.com/Achintha-999/LoginAppCSharp)
 [![Made with C#](https://img.shields.io/badge/Made%20with-C%23-239120?logo=csharp)](https://docs.microsoft.com/dotnet/csharp/)
-[![License: MIT](https://img.shields.io/github/license/Achintha-999/LoginAppCSharp)](LICENSE)
+[![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20WinForms-blue?logo=windows)](#)
+[![Target](https://img.shields.io/badge/Target-.NET%20Framework%204.7.2-lightgrey)](#)
+[![License](https://img.shields.io/github/license/Achintha-999/LoginAppCSharp)](https://github.com/Achintha-999/LoginAppCSharp/blob/main/LICENSE)
 
-A simple, opinionated Login Application written in C# for demonstration and learning purposes. This README explains what the project is, how it works, setup instructions, requirements, technologies used, security notes, and how you can contribute.
+--------------------------------------------------------------------------------
+A small, focused Windows Forms (WinForms) login demo written in C#. This project demonstrates a very simple login UI and logic (no database, no external services) and is intended for learning or quick demos.
 
----
+Quick visual:
+- 🖥️ WinForms desktop app
+- 🔐 Demo authentication (hard-coded credentials)
+- ❗ No database required — credentials are checked in code
+- ⚠️ Not production-ready — insecure defaults exist on purpose for demonstration
 
+--------------------------------------------------------------------------------
 Table of contents
-- [About](#about)
-- [Features](#features)
-- [How it works](#how-it-works)
-- [Requirements](#requirements)
-- [Technologies](#technologies)
-- [Installation & Run (local)](#installation--run-local)
-- [Configuration](#configuration)
-- [Project structure](#project-structure)
-- [Security & best practices](#security--best-practices)
-- [Testing](#testing)
-- [Contributing](#contributing)
-- [License](#license)
-- [Acknowledgements](#acknowledgements)
-
----
+- About
+- Features
+- Requirements
+- How it works (quick)
+- Files & structure
+- Build & Run (Windows / Visual Studio)
+- Customize (change credentials / messages)
+- Security notes
+- Troubleshooting
+- Contributing & License
+- Contact
 
 About
 -----
-A minimal login example written in C# to illustrate basic authentication flow: username/password entry, validation, and a simple session/authorization flow. The app can be used as a learning project or a starting point to extend into a full application (desktop or web).
+A minimal login application implemented as a WinForms project named "UserLoginSystem". It shows a login form, checks credentials, and opens a HomePage form on success. The project is intentionally small and readable for people learning WinForms.
 
 Features
 --------
-- Simple login form (username & password)
-- Local credential validation (file/embedded DB) or pluggable datasource
-- Password hashing (recommended)
-- Basic session handling
-- Clear, easy-to-read code suitable for learning
-
-How it works
-------------
-High-level flow:
-1. User launches the application and is presented with a login screen (username + password).
-2. When the user submits credentials, the app:
-   - Sanitizes and validates input locally.
-   - Looks up the user in configured user store (example: local JSON/SQLite/MS SQL).
-   - Compares the provided password with the stored password hash.
-   - If valid: the user is authenticated and navigated to the app's main area (or receives a success message).
-   - If invalid: an error message is shown.
-3. Optionally, a session token or in-memory flag is used to track logged-in state for the running session.
-
-Notes:
-- By default this repo contains a simple local data approach for demo. For production usage, swap to a real database and authentication provider (e.g., IdentityServer, ASP.NET Core Identity, OAuth2 providers).
-- Passwords must always be hashed (e.g., BCrypt / PBKDF2 / Argon2) — never store plaintext passwords.
+- Simple username & password login screen
+- Demo authentication using in-code credential check (no DB, no files)
+- Small, easy-to-read codebase suitable for learning WinForms basics
+- Example of navigating from a login form to a main/home form
 
 Requirements
 ------------
-- .NET SDK 6.0 (LTS) or later installed (dotnet CLI)
-  - Check with: dotnet --version
-- Windows / macOS / Linux — .NET apps are cross-platform, though UI frameworks like WinForms are Windows-only. Adjust instructions depending on target UI framework in the repo.
-- Visual Studio 2022 / Visual Studio Code (recommended) for editing and debugging
+- OS: Windows (WinForms desktop application)
+- Visual Studio 2019/2022 (recommended) or any IDE that supports .NET Framework WinForms
+- .NET Framework 4.7.2 (target specified in project)
+- No database or external services required
 
-Technologies
-------------
-- C# (language)
-- .NET 6.0 (or later)
-- Optional: Windows Forms / WPF / ASP.NET Core (the repository's UI type may vary)
-- Optional: SQLite / SQL Server / JSON file for demo data
-- Optional NuGet: BCrypt.Net-Next or Microsoft.AspNetCore.Identity for password hashing
+How it works (quick)
+--------------------
+1. The application entry is in Program.cs — Application.Run(new Form1()).
+2. Form1 contains the login UI (username and password textboxes) and a Button click handler.
+3. When the user clicks the login button, the code checks the entered values against the hard-coded demo credentials.
+   - If match -> instantiate HomePage, Show() it and Hide() the login form.
+   - If not match -> show a MessageBox with "Invalid username or password".
+4. HomePage is a blank (or simple) form that acts as the post-login screen.
 
-Installation & Run (local)
+Key code snippet (login check)
+```csharp
+// in UserLoginSystem/Form1.cs (button click handler)
+if (tb_username.Text == "admin" && tb_password.Text == "123")
+{
+    HomePage homePage = new HomePage();
+    homePage.Show();
+    this.Hide();
+}
+else
+{
+    MessageBox.Show("Invalid username or password. Please try again.", "Login Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+}
+```
+
+Files & project structure
 -------------------------
-1. Clone the repository
-   git clone https://github.com/Achintha-999/LoginAppCSharp.git
-   cd LoginAppCSharp
-
-2. Restore packages
-   dotnet restore
-
-3. Build
-   dotnet build
-
-4. Run
-   dotnet run --project ./path/to/your/project.csproj
-   (If the repo root is a solution, you can run `dotnet run` from the project folder.)
-
-Notes:
-- If the project is a Windows Forms or WPF app, you can open the .sln in Visual Studio and press F5.
-- If the project is an ASP.NET Core web app, running `dotnet run` will start the web host and show a URL in the console.
-
-Configuration
--------------
-- appsettings.json (or similar) — connection strings, provider choices, and secrets.
-- Example appsettings.json snippet:
-  {
-    "ConnectionStrings": {
-      "DefaultConnection": "Data Source=users.db" // for SQLite demo
-    },
-    "Auth": {
-      "UseHashedPasswords": true,
-      "PasswordHashAlgorithm": "BCrypt" // recommended
-    }
-  }
-
-- Secrets: Use environment variables or user secrets (dotnet user-secrets) for production credentials; do not commit secrets to the repository.
-
-Project structure (example)
----------------------------
-- /src
-  - /LoginAppCSharp.App             # UI (WinForms/WPF/Console/Web)
-  - /LoginAppCSharp.Core            # Domain logic, models, authentication logic
-  - /LoginAppCSharp.Data            # User store, EF Core or SQLite helpers
-- /tests
-  - /LoginAppCSharp.Tests           # Unit tests
+- UserLoginSystem/
+  - Form1.cs            — Login form + login logic
+  - HomePage.cs         — Simple form shown after successful login
+  - Program.cs          — Application entry point
+  - Properties/AssemblyInfo.cs
+  - obj/                — build artefacts (ignore)
 - README.md
-- LICENSE
+- LICENSE (if present)
 
-Security & best practices
--------------------------
-- Always hash and salt user passwords. Prefer BCrypt/Argon2/PBKDF2.
-- Use secure TLS for network transmissions.
-- Use parameterized queries / ORM to prevent SQL injection.
-- Store secrets using environment variables, OS key store, or dotnet user-secrets while developing.
-- Do not commit databases or secrets to the repository.
-- Consider using ASP.NET Core Identity for production-grade authentication.
+Build & Run (Windows / Visual Studio)
+------------------------------------
+1. Clone the repository:
+   git clone https://github.com/Achintha-999/LoginAppCSharp.git
+2. Open Visual Studio.
+3. Open the project:
+   - Either open the solution if present, or open the UserLoginSystem/UserLoginSystem.csproj file.
+4. Build the project (Build → Build Solution).
+5. Run the project (Debug → Start Debugging or press F5).
+6. Login screen appears. Demo credentials (for quick test):
+   - Username: admin
+   - Password: 123
 
-Testing
--------
-- Unit tests (if included) live under /tests
-- Run tests:
-  dotnet test
+Alternative (command-line build):
+- Use MSBuild (available with Visual Studio tools):
+  msbuild UserLoginSystem\UserLoginSystem.csproj /p:Configuration=Debug
+- Run the generated executable from bin\Debug\ (e.g., UserLoginSystem.exe).
 
-- For manual testing:
-  - Create a demo user in the user store (see sample seed file or method).
-  - Attempt login using correct and incorrect credentials to verify behavior.
+Customize (change credentials / behavior)
+-----------------------------------------
+- To change the demo credentials, open UserLoginSystem/Form1.cs and edit the if-check in the button click handler.
+- To replace the in-code check with a more realistic approach (configuration file or secure store), modify the authentication logic in Form1.cs or move it to a separate class for clarity.
 
-Screenshots
------------
-(Add image files under /assets/screenshots and reference them here)
-- Login screen (example): /assets/screenshots/login.png
-- Success screen (example): /assets/screenshots/home.png
+Security notes (IMPORTANT)
+--------------------------
+- This project uses hard-coded credentials for demonstration. This is insecure and should never be used in production.
+- No password hashing or storage is implemented here.
+- If you want to use this as a starting point for a real app:
+  - Replace hard-coded credentials with a proper authentication provider.
+  - Use secure storage and hashed passwords (bcrypt / PBKDF2 / Argon2).
+  - Add input validation and consider account lockout/brute-force mitigation.
+- For learning and demos, this code is intentionally simple.
+
+Troubleshooting
+---------------
+- If Visual Studio reports missing .NET Framework target, install Developer Pack for .NET Framework 4.7.2.
+- If you see no UI on launch, ensure Program.cs calls Application.Run(new Form1()).
+- If the app immediately closes, run it from Visual Studio with the debugger attached to view exceptions.
 
 Contributing
 ------------
-Contributions are welcome! Please follow these steps:
-1. Fork the repository
-2. Create a feature branch: git checkout -b feature/your-feature
-3. Commit your changes: git commit -m "Add some feature"
-4. Push to your fork: git push origin feature/your-feature
-5. Open a Pull Request describing your changes
-
-Please follow coding conventions used in the repo, add unit tests for new logic, and document new behaviors in README.
+This is a small demo. Contributions that improve clarity, add comments, or make the demo safer (while keeping a demo mode) are welcome:
+1. Fork the repo
+2. Create a branch (feature/your-change)
+3. Submit a PR with explanation of your changes
 
 License
 -------
-This repository is distributed under the MIT License. See LICENSE for details.
+Check the LICENSE file in the repository. If present, it is applied to this codebase.
 
 Acknowledgements
 ----------------
-- Built for learning and demonstration purposes.
-- Uses community NuGet packages and patterns (BCrypt.Net, EF Core, ASP.NET Core etc.) depending on how you extend it.
+Made for learning WinForms and quick demos. Thanks to the C# and .NET communities.
 
 Contact
 -------
-Maintainer: Achintha-999 (GitHub)  
-If you want me to adapt the README to the exact project layout (WinForms vs ASP.NET vs Console) I can update it — please tell me which project file is the app entry (path to .csproj or describe the UI).
+Maintainer: Achintha-999 (GitHub)
 
----
-
-What I did: I created a complete, decorated README.md tailored for a C# login application with badges, clear sections, and practical instructions and best practices.
-
-What's next: tell me whether this repo is a console app, WinForms/WPF, or ASP.NET Core web app (or point me to the .csproj path). I can then tailor the Installation, Run, and Configuration sections and open a PR to add this README to the repository if you'd like.
+--------------------------------------------------------------------------------
+Have fun exploring WinForms — if you'd like, I can also:
+- Replace the hard-coded check with a simple credential file (JSON) while keeping "no DB",
+- Or add a toggle to the UI to enable/disable demo-mode credentials.
