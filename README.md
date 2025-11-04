@@ -141,6 +141,4 @@ Contact
 Maintainer: Achintha-999 (GitHub)
 
 --------------------------------------------------------------------------------
-Have fun exploring WinForms — if you'd like, I can also:
-- Replace the hard-coded check with a simple credential file (JSON) while keeping "no DB",
-- Or add a toggle to the UI to enable/disable demo-mode credentials.
+
